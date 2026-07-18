@@ -1,0 +1,30 @@
+# Phoenix14T configuration.
+# Replace the placeholder paths below with the locations on your machine.
+data:
+    # LMDB store of preprocessed RGB frames, one sub-folder per split (train/dev/test).
+    lmdb_path: data/phoenix14t/lmdb
+    max_length: 300
+    # Prefix for the label files: <labels>.train / <labels>.dev / <labels>.test
+    labels: data/phoenix14t/labels
+    # Precomputed sign-description features (mBART-large-50 encoded, offline).
+    desc_path: data/phoenix14t/desc_feat
+    # Precomputed HaMeR hand features (distillation targets).
+    hamer_path: data/phoenix14t/hamer
+model:
+    # Trimmed mBART used as the in-framework text encoder / SLT encoder-decoder.
+    tokenizer: pretrained/MBart_trimmed
+    transformer: pretrained/MBart_trimmed
+    resnet: pretrained/resnet18.pth
+    # DINOv2 (ViT-S/14) visual-encoder weights.
+    dino: pretrained/dino/tmp.pth
+    embed_dim: 1024
+    sign_proj: False
+training:
+    wandb: disabled   # online or disabled
+    scale_embedding: False
+    # Pre-trained checkpoint loaded at the start of fine-tuning
+    # (best configuration in the paper: landa_desc=0.5, landa_hamer=0.3).
+    ckpt_path: checkpoints/pretrain_phoenix.ckpt
+save:
+    output: outputs/phoenix
+    csv: csv_outputs/

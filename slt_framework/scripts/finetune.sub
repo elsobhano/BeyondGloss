@@ -1,0 +1,27 @@
+#!/bin/sh
+# Example SLURM submission for fine-tuning (SLT). Adjust partition/resources/container to your site.
+
+#SBATCH --job-name="beyondgloss-finetune"
+#SBATCH --gpus=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=100G
+#SBATCH --time=0-20:00:00
+#SBATCH -o slurm_logs/slurm.%N.%j.out
+#SBATCH -e slurm_logs/slurm.%N.%j.err
+
+find_available_port() {
+    while true; do
+        PORT=$(( (RANDOM % 10000) + 10000 ))
+        (echo > /dev/tcp/127.0.0.1/$PORT) >/dev/null 2>&1 || break
+    done
+    echo $PORT
+}
+PORT=$(find_available_port)
+
+# The pre-trained checkpoint is read from `training.ckpt_path` in the config
+# (or pass --model_ckpt to override).
+./launch.sh torchrun --nproc_per_node=1 --master_port=$PORT finetune.py \
+    --data_config configs/config.yaml \
+    --batch_size 16 --eval_freq 1 --lr 4e-4 --num_beams 5 \
+    --seed 42 --label_smoothing 0.2 --warmup 0.2

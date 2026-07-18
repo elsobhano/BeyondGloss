@@ -1,0 +1,39 @@
+#!/bin/sh
+# BeyondGloss pre-commit hook: block commits that contain likely secrets.
+# Install with:  bash scripts/install-hooks.sh
+# Bypass (only if you are SURE it is a false positive):  git commit --no-verify
+
+# Secret value patterns (target real credentials, not placeholders/comments).
+PATTERNS='sk-[A-Za-z0-9]{20,}|sk-proj-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[A-Za-z0-9-]{10,}|["'"'"'][0-9a-f]{40}["'"'"']|(WANDB_API_KEY|api[_-]?key|secret|password|passwd)["'"'"' ]*[:=]+ *["'"'"'][^"'"'"']{12,}["'"'"']'
+
+found=0
+# Only the files staged for this commit (added/copied/modified).
+files=$(git diff --cached --name-only --diff-filter=ACM)
+
+for f in $files; do
+    # Skip the hook itself (it contains the patterns as text) and binaries.
+    case "$f" in
+        scripts/git-hooks/pre-commit) continue ;;
+    esac
+    if git show ":$f" 2>/dev/null | grep -qI . ; then   # -I: skip if binary
+        matches=$(git show ":$f" 2>/dev/null | grep -nEI "$PATTERNS")
+        if [ -n "$matches" ]; then
+            if [ "$found" -eq 0 ]; then
+                echo "✖ Possible secret(s) detected in staged changes:"
+                echo
+            fi
+            found=1
+            echo "  $f:"
+            echo "$matches" | sed 's/^/    /'
+            echo
+        fi
+    fi
+done
+
+if [ "$found" -ne 0 ]; then
+    echo "Commit aborted. Remove the secret (use an environment variable instead),"
+    echo "or, if this is genuinely a false positive, re-run with:  git commit --no-verify"
+    exit 1
+fi
+
+exit 0

@@ -1,0 +1,20 @@
+#!/bin/sh
+# Example SLURM submission for Stage 1 (segment description) on one shard.
+# Adjust partition, resources, paths and the container/interpreter to your site.
+
+#SBATCH --job-name="sign-descriptor"
+#SBATCH --gpus=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=100G
+#SBATCH --time=0-30:00:00
+#SBATCH -o slurm_logs/slurm.%N.%j.out
+#SBATCH -e slurm_logs/slurm.%N.%j.err
+
+# Path to your Python interpreter / environment.
+PYTHON=python
+
+$PYTHON describe_segments.py \
+    --json_path   /path/to/shards/chunk_1.json \
+    --main_dir    /path/to/frames \
+    --output_dir  /path/to/descriptions
