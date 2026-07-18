@@ -10,7 +10,7 @@ The sign-description generation used as supervision here lives in a separate
 module (`../sign_video_descriptor`); this framework consumes its output as
 **precomputed description features** (see below).
 
-## Method overview
+## 🧠 Method overview
 
 **Pre-training** (`pretrain.py`, `models/Pretrain_Model.py`) optimises a single
 combined loss (Eq. 8 in the paper):
@@ -54,7 +54,7 @@ mBART-large-cc25 for the target sentence. In this code they play different roles
   (`model.transformer` / `model.tokenizer` in the config), used for video–target
   alignment and for the translation decoder.
 
-## Layout
+## 📁 Layout
 
 ```
 pretrain.py              # pre-training entry point (full combined loss)
@@ -77,7 +77,7 @@ trim.py                  # preprocessing: build the trimmed mBART (pretrained/MB
 environment.yml          # conda/pip environment
 ```
 
-## Setup
+## ⚙️ Setup
 
 ```bash
 conda env create -f environment.yml
@@ -100,7 +100,7 @@ Provide the following locally and point the config at them (all paths in
 To log with Weights & Biases, run `wandb login` (or set `WANDB_API_KEY` in your
 environment); pass `--logger tensorboard` to log locally instead.
 
-## Usage
+## ▶️ Usage
 
 ```bash
 # 1) Pre-training
@@ -117,7 +117,7 @@ environment); pass `--logger tensorboard` to log locally instead.
 Swap `configs/config.yaml` for `configs/csldaily.yaml` to run on CSL-Daily. Example
 cluster submission files are in `scripts/`.
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 Built on [DINOv2](https://github.com/facebookresearch/dinov2), mBART
 ([Hugging Face Transformers](https://github.com/huggingface/transformers)),

@@ -11,7 +11,7 @@ supervision during the pre-training stage of the BeyondGloss framework
   <img src="assets/pipeline.png" alt="Sign Video Descriptor pipeline" width="100%">
 </p>
 
-## Pipeline
+## 🔄 Pipeline
 
 The descriptor works in two stages:
 
@@ -32,7 +32,7 @@ The descriptor works in two stages:
 `describe_single_video.py` runs Stage 1 on a single video file for quick
 inspection. `prepare_shards.py` splits a dataset into shards for parallel runs.
 
-## Setup
+## ⚙️ Setup
 
 Stage 1 depends on the ShareGPT4Video / LLaVA code and the ShareGPT4Video-8B
 checkpoint:
@@ -58,7 +58,7 @@ For Stage 2, provide your OpenAI key via the environment (never commit it):
 export OPENAI_API_KEY="sk-..."
 ```
 
-## Usage
+## ▶️ Usage
 
 Input frames are expected as one subdirectory per video, each holding the
 extracted frames as `.png`/`.jpg` (frame extraction is dataset-specific and not
@@ -91,7 +91,7 @@ Both stages are resumable — videos with an existing output JSON are skipped.
 `scripts/` contains a minimal launcher and an example SLURM submission file for
 running Stage 1 across shards on a cluster (adjust to your site).
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 Stage 1 builds on [ShareGPT4Video](https://github.com/ShareGPT4Omni/ShareGPT4Video)
 (NeurIPS 2024) and the [LLaVA](https://github.com/haotian-liu/LLaVA) codebase.
